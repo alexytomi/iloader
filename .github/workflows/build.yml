@@ -24,6 +24,8 @@ jobs:
         include:
           - platform: "ubuntu-22.04"
             args: "--bundles deb"
+          - platform: "ubuntu-22.04-arm"
+            args: "--bundles deb"
           - platform: "ubuntu-22.04"
             args: "--bundles rpm"
           - platform: "ubuntu-22.04"
@@ -55,7 +57,7 @@ jobs:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Install Linux dependencies
-        if: matrix.platform == 'ubuntu-22.04'
+        if: matrix.platform == 'ubuntu-22.04' || matrix.platform == 'ubuntu-22.04-arm'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf perl make
@@ -135,6 +137,13 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' && matrix.args == '--bundles deb'
         with:
           name: linux-deb
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.deb
+
+      - name: Upload Linux Arm64 DEB
+        uses: actions/upload-artifact@v4
+        if: matrix.platform == 'ubuntu-22.04-arm' && matrix.args == '--bundles deb'
+        with:
+          name: linux-deb-arm64
           path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.deb
 
       - name: Upload Linux RPM

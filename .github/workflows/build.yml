@@ -106,7 +106,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          args: ${{ matrix.args }} ${{ github.event_name != 'release' && ' --config src-tauri/ci.conf.json' || '' }}
+          args: ${{ matrix.args }} ${{ github.event_name != 'release' && ' --config src-tauri/ci.conf.json' || '' }} --debug
           includeUpdaterJson: ${{ github.event_name == 'release' }}
           releaseId: ${{ github.event_name == 'release' && github.event.release.id || '' }}
           assetNamePattern: "[name]-[platform]-[arch][ext]"
@@ -132,42 +132,42 @@ jobs:
         if: matrix.platform == 'macos-latest'
         with:
           name: macos-dmg-universal
-          path: ${{ github.workspace }}/src-tauri/target/**/release/bundle/**/*.dmg
+          path: ${{ github.workspace }}/src-tauri/target/**/debug/bundle/**/*.dmg
 
       - name: Upload Linux DEB
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'ubuntu-22.04' && matrix.args == '--bundles deb'
         with:
           name: linux-deb
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.deb
+          path: ${{ github.workspace }}/src-tauri/target/debug/bundle/**/*.deb
 
       - name: Upload Linux Arm64 DEB
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'ubuntu-22.04-arm' && matrix.args == '--bundles deb'
         with:
           name: linux-deb-arm64
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.deb
+          path: ${{ github.workspace }}/src-tauri/target/debug/bundle/**/*.deb
 
       - name: Upload Linux Arm64 AppImage
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'ubuntu-22.04-arm' && matrix.args == '--bundles appimage'
         with:
           name: linux-appimage-arm64
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.AppImage
+          path: ${{ github.workspace }}/src-tauri/target/debug/bundle/**/*.AppImage
 
       - name: Upload Linux RPM
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'ubuntu-22.04' && matrix.args == '--bundles rpm'
         with:
           name: linux-rpm
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.rpm
+          path: ${{ github.workspace }}/src-tauri/target/debug/bundle/**/*.rpm
 
       - name: Upload Linux AppImage
         uses: actions/upload-artifact@v4
         if: matrix.platform == 'ubuntu-22.04' && matrix.args == '--bundles appimage'
         with:
           name: linux-appimage
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/**/*.AppImage
+          path: ${{ github.workspace }}/src-tauri/target/debug/bundle/**/*.AppImage
 
       - name: Upload Windows EXE
         uses: actions/upload-artifact@v4

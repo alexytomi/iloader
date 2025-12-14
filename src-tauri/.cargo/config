@@ -1,0 +1,6 @@
+[target.aarch64-linux-android]
+linker = "aarch64-linux-android30-clang"
+
+rustflags = [
+  "-C", "link-args=--sysroot=/run/media/tom/the-big-one/AndroidStudio/ndk/29.0.13113456/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
+]

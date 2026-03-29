@@ -11,6 +11,10 @@ fn main() {
             }
         }
     }
+    #[cfg(target_os = "android")]
+    unsafe {
+        std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+    }
 
     // To be quite honest, I have no idea how ring has made its way into the dependence tree in some cases.
     rustls::crypto::aws_lc_rs::default_provider()

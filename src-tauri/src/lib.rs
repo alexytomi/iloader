@@ -1,3 +1,7 @@
+use serde_json::Value;
+use tauri::AppHandle;
+use tauri_plugin_store::StoreExt;
+
 #[macro_use]
 mod account;
 #[macro_use]
@@ -114,4 +118,22 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn list_stored_ids(handle: AppHandle) -> Result<Vec<String>, String> {
+    let store = handle
+        .store("data.json")
+        .map_err(|e| format!("Failed to get store: {:?}", e))?;
+    let existing_ids = store
+        .get("ids")
+        .unwrap_or_else(|| Value::Array(vec![]))
+        .as_array()
+        .cloned()
+        .unwrap_or_else(|| vec![]);
+    let ids: Vec<String> = existing_ids
+        .into_iter()
+        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+        .collect();
+    Ok(ids)
 }
